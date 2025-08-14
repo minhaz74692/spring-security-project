@@ -4,12 +4,14 @@ import com.mie.secureapp.model.Users;
 import com.mie.secureapp.repository.UserRepo;
 import com.mie.secureapp.request.UserRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepo userRepo;
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
     public Users register(UserRequestDto user){
         Users existingUser = userRepo.findByUsername(user.getUsername());
@@ -18,7 +20,7 @@ public class UserService {
         }
         Users newUser = new Users();
         newUser.setUsername(user.getUsername());
-        newUser.setPassword(user.getPassword());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         return  userRepo.save(newUser);
     }
 }
