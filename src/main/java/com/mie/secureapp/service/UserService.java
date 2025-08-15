@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepo userRepo;
+    private final JWTService jwtService;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
     @Autowired
@@ -35,7 +36,7 @@ public class UserService {
     public String login(UserRequestDto userDTO) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
         if (authentication.isAuthenticated())
-            return "Login successful for user: " + userDTO.getUsername();
+            return jwtService.getToken(userDTO.getUsername());
 
         return "failed";
     }
