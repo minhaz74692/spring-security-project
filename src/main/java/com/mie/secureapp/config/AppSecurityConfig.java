@@ -35,10 +35,21 @@ public class AppSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception{
       return   httpSecurity
                     .csrf(customizer -> customizer.disable())
-                    .authorizeHttpRequests(request-> request
-                            .requestMatchers("/api/users/register", "/api/users/login")
-                            .permitAll() //Allow these endpoints without authentication
-                            .anyRequest().authenticated())
+
+//              This approach is when you authenticate all requests, except for the ones you want to allow without authentication.
+//                    .authorizeHttpRequests(request-> request
+//                            .requestMatchers("/api/users/register", "/api/users/login")
+//                            .permitAll() //Allow these endpoints without authentication
+//                            .anyRequest().authenticated()
+//                    )
+
+
+//              This approach is when you restrict certain endpoints to authenticated users only, and allow public access to others.
+                    .authorizeHttpRequests(request -> request
+                          .requestMatchers("/api/student/**").authenticated()
+                          .requestMatchers("/api/secure/**").authenticated()
+                          .anyRequest().permitAll()
+                    )
                     .formLogin(Customizer.withDefaults())
                     .httpBasic(Customizer.withDefaults())
                     .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Get new session ID for each request

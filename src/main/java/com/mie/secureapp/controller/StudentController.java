@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/api/student")
 public class StudentController {
     List<Student> students = new ArrayList<>(List.of(
             new Student(1,"minhaz", 28),
